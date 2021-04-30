@@ -18,7 +18,7 @@ public class MoveForward : MonoBehaviour
     {
         arrowRigidbody = GetComponent<Rigidbody>();
         playerControllerscript = GameObject.Find("Player").GetComponent<PlayerController>();
-        arrowHit = false;
+        arrowHit = false;        
     }
 
     // Update is called once per frame
@@ -30,6 +30,12 @@ public class MoveForward : MonoBehaviour
     {
         arrowRigidbody.AddRelativeForce(Vector3.forward * speed);
         DestroyOutOfBounds();
+    }
+
+    IEnumerator DespawnArrow()
+    {
+        yield return new WaitForSeconds(despawnTimer);
+        Destroy(gameObject);
     }
 
     private void DestroyOutOfBounds()
@@ -48,6 +54,7 @@ public class MoveForward : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        
         if (collision.gameObject.CompareTag("Player"))
         {
             ++playerControllerscript.shieldHits;
@@ -58,7 +65,7 @@ public class MoveForward : MonoBehaviour
             speed /= 2;
             arrowRigidbody.constraints = RigidbodyConstraints.None;
             arrowRigidbody.useGravity = true;
-
+            StartCoroutine(DespawnArrow());
         }
             
     }
