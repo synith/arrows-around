@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
         enemyRigidbody = GetComponent<Rigidbody>();
         StartCoroutine(ShotDelay());
         enemyShootDelay = Random.Range(1.5f, 3f);
+
     }
 
     // Update is called once per frame
