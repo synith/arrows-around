@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1813845188305043150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.25, y: 0.5, z: 6.75}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3224119406358712366}
   m_Father: {fileID: 0}
@@ -168,7 +168,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6538808, guid: dd93966018ccadd459c92701f0e8e129, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5451688, guid: dd93966018ccadd459c92701f0e8e129, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dd93966018ccadd459c92701f0e8e129, type: 3}
 --- !u!4 &3224119406358712366 stripped
 Transform:
