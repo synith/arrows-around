@@ -55,13 +55,14 @@ public class MoveForward : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && !arrowHit)
         {
             ++playerControllerscript.shieldHits;
             Destroy(gameObject);
         }
         else
         {
+            arrowHit = true;
             speed /= 2;
             arrowRigidbody.constraints = RigidbodyConstraints.None;
             arrowRigidbody.useGravity = true;

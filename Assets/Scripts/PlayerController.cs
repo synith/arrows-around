@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
         shieldUp = false;
         shieldHits = 0;
         bodyHits = 0;
+        shieldObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -105,10 +106,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log("So Stronk");
             Destroy(other.gameObject);
         }
-        if (other.CompareTag("Arrow"))
+        if (other.CompareTag("Arrow") && !other.GetComponent<MoveForward>().arrowHit)
         {
-            ++bodyHits;
             Destroy(other.gameObject);
+            ++bodyHits;            
         }
     }
 }
