@@ -21,13 +21,6 @@ public class SpawnManager : MonoBehaviour
         InvokeRepeating("SpawnEnemy", 3f, enemySpawnRate);
         InvokeRepeating("SpawnPickUp", 5f, pickUpSpawnRate);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void SpawnEnemy()
     {
         float spawnRangeRandom = Random.Range(-spawnRange, spawnRange);
@@ -39,8 +32,7 @@ public class SpawnManager : MonoBehaviour
 
         Vector3[] spawnPosition ={spawnPosTop,spawnPosBot,spawnPosRight,spawnPosLeft};
         int randomIndex = Random.Range(0, 4);
-        Instantiate(enemy, spawnPosition[randomIndex], enemy.transform.rotation);       
-        
+        Instantiate(enemy, spawnPosition[randomIndex], enemy.transform.rotation);        
     }
     void SpawnPickUp()
     {

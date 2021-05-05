@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class ArrowMovement : MonoBehaviour
 {
+    public Rigidbody arrowRigidbody;
+    public float speed = 20f;
+    public float torque = 2f;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        arrowRigidbody = GetComponent<Rigidbody>();
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    // Add forward force and torque to arrow modified with speed
+    public void MoveArrow()
     {
-        
+        arrowRigidbody.AddRelativeForce(Vector3.forward * speed);
+        arrowRigidbody.AddRelativeTorque(0, 0, torque);
     }
 }

@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class ArrowController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private ArrowBoundary arrowBoundary;
+    public ArrowMovement arrowMovement;
+    public PlayerController playerController;
+    private void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        arrowBoundary = gameObject.GetComponent<ArrowBoundary>();
+        arrowMovement = gameObject.GetComponent<ArrowMovement>();
+    }    
+    private void FixedUpdate()
     {
-        
+        arrowBoundary.DestroyOutOfBounds();
+        arrowMovement.MoveArrow();
     }
 }

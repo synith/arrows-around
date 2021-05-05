@@ -13,7 +13,10 @@ GameObject:
   - component: {fileID: 8625810641515140403}
   - component: {fileID: 8625810641515140400}
   - component: {fileID: 8625810641515140415}
-  - component: {fileID: 8625810641515140412}
+  - component: {fileID: -6396193933126587037}
+  - component: {fileID: 5934478069221643017}
+  - component: {fileID: -9032116061688619413}
+  - component: {fileID: -5467650585307268496}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Arrow
@@ -114,7 +117,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 52
   m_CollisionDetection: 0
---- !u!114 &8625810641515140412
+--- !u!114 &-6396193933126587037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,14 +126,51 @@ MonoBehaviour:
   m_GameObject: {fileID: 8625810641515140401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fe626f49088e254cab5b79a665f8a8e, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d4af2658fa19b2499ecdf99cbceb43d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowMovement: {fileID: 0}
+  playerController: {fileID: 0}
+--- !u!114 &5934478069221643017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625810641515140401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc12dea7f5aa0e644950bffd6335ee0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  despawnTimer: 1
+--- !u!114 &-9032116061688619413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625810641515140401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17fe8a1d9c53cd34b889de171ca99db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5467650585307268496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625810641515140401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7726e2177cf11fb4b8fb6a634df252d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrowRigidbody: {fileID: 0}
   speed: 20
-  zRange: 20
-  xRange: 20
-  despawnTimer: 2
-  arrowHit: 0
+  torque: 2
 --- !u!1001 &7724687552149147510
 PrefabInstance:
   m_ObjectHideFlags: 0
