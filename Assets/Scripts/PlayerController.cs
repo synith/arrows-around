@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public int
         shieldHits,
         bodyHits;
+    [SerializeField] TextMeshProUGUI bodyText;
+    [SerializeField] TextMeshProUGUI shieldText;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +45,9 @@ public class PlayerController : MonoBehaviour
         {
             shieldUp = false;
         }
+
+        bodyText.text = "Body: " + bodyHits;
+        shieldText.text = "Shield: " + shieldHits; 
         
     }
     private void FixedUpdate()
