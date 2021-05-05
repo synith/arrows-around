@@ -5,11 +5,10 @@ using UnityEngine;
 public class MoveForward : MonoBehaviour
 {
     private Rigidbody arrowRigidbody;
-    public float
-        speed = 20f,
-        zRange = 20,
-        xRange = 30,
-        despawnTimer = 3;
+    [SerializeField] float speed = 20f;
+    [SerializeField] float zRange = 20;
+    [SerializeField] float xRange = 30;
+    [SerializeField] float despawnTimer = 1;
     public bool arrowHit;
     private PlayerController playerControllerscript;
 
@@ -18,17 +17,13 @@ public class MoveForward : MonoBehaviour
     {
         arrowRigidbody = GetComponent<Rigidbody>();
         playerControllerscript = GameObject.Find("Player").GetComponent<PlayerController>();
-        arrowHit = false;        
+        arrowHit = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     private void FixedUpdate()
     {
         arrowRigidbody.AddRelativeForce(Vector3.forward * speed);
+        arrowRigidbody.AddRelativeTorque(0, 0, 2);
         DestroyOutOfBounds();
     }
 
@@ -54,21 +49,41 @@ public class MoveForward : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
-        if (collision.gameObject.CompareTag("Player") && !arrowHit)
+        foreach (ContactPoint c in collision.contacts)
         {
-            ++playerControllerscript.shieldHits;
-            Destroy(gameObject);
+            Debug.Log(c.otherCollider.name);
+            if (c.otherCollider.CompareTag("Shield") && !arrowHit)
+            {
+                ++playerControllerscript.shieldHits;
+                Debug.Log("Shield Hit");
+                ArrowHit();
+                StartCoroutine(DespawnArrow());
+            }
+            else if (c.otherCollider.CompareTag("Body") && !arrowHit)
+            {
+                ++playerControllerscript.bodyHits;
+                Debug.Log("Body Hit");
+                ArrowHit();
+                StartCoroutine(DespawnArrow());
+            }
+            else
+            {
+                ArrowHit();
+                StartCoroutine(DespawnArrow());
+            }
         }
-        else
-        {
-            arrowHit = true;
-            speed /= 2;
-            arrowRigidbody.constraints = RigidbodyConstraints.None;
-            arrowRigidbody.useGravity = true;
-            StartCoroutine(DespawnArrow());
-        }
-            
+
     }
-      
+
+
+
+    private void ArrowHit()
+    {
+        arrowHit = true;
+        speed /= 2;
+        arrowRigidbody.constraints = RigidbodyConstraints.None;
+        arrowRigidbody.useGravity = true;
+
+    }
+
 }

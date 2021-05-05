@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
         
         if (canShoot)
         {
-            Instantiate(arrowPrefab, transform.position, transform.rotation);
+            Instantiate(arrowPrefab, new Vector3(transform.position.x, 1f, transform.position.z), transform.rotation);
             canShoot = false;
             StartCoroutine(ShotDelay());
         }

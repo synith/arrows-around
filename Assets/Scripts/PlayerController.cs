@@ -106,10 +106,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("So Stronk");
             Destroy(other.gameObject);
         }
-        if (other.CompareTag("Arrow") && !other.GetComponent<MoveForward>().arrowHit)
-        {
-            Destroy(other.gameObject);
-            ++bodyHits;            
-        }
     }
+    
 }
