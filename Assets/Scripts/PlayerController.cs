@@ -19,11 +19,13 @@ public class PlayerController : MonoBehaviour
         bodyHits;
     [SerializeField] TextMeshProUGUI bodyText;
     [SerializeField] TextMeshProUGUI shieldText;
+    private Animator playerAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        playerAnimator = GetComponent<Animator>();
         shieldObject = GameObject.Find("Shield");
         shieldUp = false;
         shieldHits = 0;
@@ -77,7 +79,12 @@ public class PlayerController : MonoBehaviour
 
             // Without physics:
             //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);
+
+
+            playerAnimator.SetBool("moving_b", true);
         }
+        else
+            playerAnimator.SetBool("moving_b", false);
     }
 
     // Sets horizontal and vertical input as a vector
@@ -86,7 +93,6 @@ public class PlayerController : MonoBehaviour
         // a vector based on our x and y input
         moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         moveDirection.Normalize();
-        
     }
 
     
