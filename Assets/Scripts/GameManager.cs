@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
     {
         // find player controller script and assign it to our variable
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        gameOver = false;
+        playerHp = 10;
     }
 
     // Update is called once per frame

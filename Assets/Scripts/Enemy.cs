@@ -11,9 +11,12 @@ public class Enemy : MonoBehaviour
     public GameObject arrowPrefab;
     private Animator enemyAnimator;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         player = GameObject.Find("Player");
         enemyRigidbody = GetComponent<Rigidbody>();
         enemyShootDelay = Random.Range(1.5f, 3f);
@@ -27,8 +30,11 @@ public class Enemy : MonoBehaviour
     }
     void Shoot()
     {
-        enemyAnimator.SetTrigger("shoot_trig");
-        Instantiate(arrowPrefab, new Vector3(transform.position.x, 1.5f, transform.position.z), transform.rotation);
+        if (!gameManager.gameOver)
+        {
+            enemyAnimator.SetTrigger("shoot_trig");
+            Instantiate(arrowPrefab, new Vector3(transform.position.x, 1.5f, transform.position.z), transform.rotation);
+        }
     }
     void RotateTowardsPlayer()
     {
@@ -36,7 +42,7 @@ public class Enemy : MonoBehaviour
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
 
         // Quaternion using vector to represent where we want to rotate to
-        Quaternion rotateEnemy = Quaternion.LookRotation(lookDirection);        
+        Quaternion rotateEnemy = Quaternion.LookRotation(lookDirection);
 
         // rotate rigidbody from current rotation to target rotation at a set speed degrees/second
         enemyRigidbody.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotateEnemy, rotateSpeed));
@@ -49,5 +55,5 @@ public class Enemy : MonoBehaviour
         // If not caring about rotation speed:
         //transform.LookAt(lookDirection);
     }
-    
+
 }

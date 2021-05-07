@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
         zRange = 13,
         rotateSpeed;
     private Vector3 moveDirection;
-    private Rigidbody playerRb;    
+    private Rigidbody playerRb;
     public bool shieldUp;
     private GameObject shieldObject;
     public int
@@ -43,33 +43,37 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
         {
-            shieldUp = true;            
+            shieldUp = true;
         }
         else
         {
             shieldUp = false;
         }
 
-        bodyText.text = "Body: " + bodyHits;
-        shieldText.text = "Shield: " + shieldHits;
-
-        
-
+        if (!gameManager.gameOver)
+        {
+            bodyText.text = "Body: " + bodyHits;
+            shieldText.text = "Shield: " + shieldHits;
+        }
     }
     private void FixedUpdate()
     {
-        //if game manager script bool shielddestroyed is false then do this:
-        if (!gameManager.shieldBroken)
-            shieldObject.SetActive(shieldUp);
-        else
-            shieldObject.SetActive(false);
+        if (!gameManager.gameOver)
+        {
+            //if game manager script bool shielddestroyed is false then do this:
+            if (!gameManager.shieldBroken)
+                shieldObject.SetActive(shieldUp);
+            else
+                shieldObject.SetActive(false);
 
-        // Movement
-        playerRb.AddForce(moveDirection * speed);
-        ConstrainPlayer();
+            // Movement
+            playerRb.AddForce(moveDirection * speed);
+            ConstrainPlayer();
 
-        // Rotation
-        RotateTowardsMovementDirection();        
+            // Rotation
+            RotateTowardsMovementDirection();
+        }
+
     }
 
     // Rotates player to direction they are moving in
@@ -103,21 +107,21 @@ public class PlayerController : MonoBehaviour
         moveDirection.Normalize();
     }
 
-    
+
     // If the player goes outside of boundary set player position to the boundary
     private void ConstrainPlayer()
     {
-        if (transform.position.x < -xRange)        
-            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);        
+        if (transform.position.x < -xRange)
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
         if (transform.position.x > xRange)
-            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);        
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
         if (transform.position.z < -zRange)
             transform.position = new Vector3(transform.position.x, transform.position.y, -zRange);
         if (transform.position.z > zRange)
-            transform.position = new Vector3(transform.position.x, transform.position.y, zRange);        
+            transform.position = new Vector3(transform.position.x, transform.position.y, zRange);
     }
 
-    
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -140,8 +144,8 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(other.gameObject);
             }
-            
+
         }
     }
-    
+
 }
