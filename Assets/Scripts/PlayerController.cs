@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] TextMeshProUGUI bodyText;
     [SerializeField] TextMeshProUGUI shieldText;
     private Animator playerAnimator;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
         shieldObject = GameObject.Find("Shield");
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         shieldUp = false;
         shieldHits = 0;
         bodyHits = 0;
@@ -49,12 +51,18 @@ public class PlayerController : MonoBehaviour
         }
 
         bodyText.text = "Body: " + bodyHits;
-        shieldText.text = "Shield: " + shieldHits; 
+        shieldText.text = "Shield: " + shieldHits;
+
         
+
     }
     private void FixedUpdate()
     {
-        shieldObject.SetActive(shieldUp);
+        //if game manager script bool shielddestroyed is false then do this:
+        if (!gameManager.shieldBroken)
+            shieldObject.SetActive(shieldUp);
+        else
+            shieldObject.SetActive(false);
 
         // Movement
         playerRb.AddForce(moveDirection * speed);
@@ -116,7 +124,23 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("PickUp"))
         {
             Debug.Log("So Stronk");
-            Destroy(other.gameObject);
+            --shieldHits;
+
+
+            if (shieldHits < 0)
+            {
+                shieldHits = 0;
+            }
+            else if (shieldHits > 5)
+            {
+                shieldHits = 5;
+            }
+
+            if (gameManager.shieldHp >= 0 && gameManager.shieldHp < 5)
+            {
+                Destroy(other.gameObject);
+            }
+            
         }
     }
     
