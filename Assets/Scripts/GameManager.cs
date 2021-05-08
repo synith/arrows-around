@@ -7,28 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Variables
-    // int hp
-    // bool gameover
-
-    // hp = max hp - body hits
-
-    // if hp =< 0
-    // player dies
-    // game is over
-
-    // Variables
-    // int shieldHP
-    // bool shieldbroken
-
-    // shieldhp = shieldmax hp - shield hits
-
-    // if shieldhp =< 0
-    // shield broken
-    // shield cant be used
-
-    public int playerHp;
-    public int shieldHp;
+    public int playerHp = 10;
+    public int shieldHp = 5;
     public bool gameOver;
     public bool shieldBroken;
     [SerializeField] private int playerMaxhp = 10;
@@ -38,16 +18,29 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI shieldhpText;
     [SerializeField] TextMeshProUGUI gameoverText;
 
+    public Button restartButton;
+    public GameObject titleScreen;
+
     // gain access to player script for shield and body hits
     private PlayerController playerController;
+    private SpawnManager spawnManager;
 
     // Start is called before the first frame update
     void Start()
     {
         // find player controller script and assign it to our variable
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        
         gameOver = false;
         playerHp = 10;
+    }
+
+    public void StartGame()
+    {
+        spawnManager.SpawnManagerStart();
+        playerController.PlayerControllerStart();
+        titleScreen.SetActive(false);
     }
 
     // Update is called once per frame
@@ -57,23 +50,23 @@ public class GameManager : MonoBehaviour
         shieldHp = shieldMaxhp - playerController.shieldHits;
 
         playerhpText.text = "HP: " + playerHp;
-        shieldhpText.text = "Shield HP: " + shieldHp;       
+        shieldhpText.text = "Shield HP: " + shieldHp;
 
-        if (playerHp <= 0)
+        if (playerHp < 1)
         {
             gameOver = true;
+            restartButton.gameObject.SetActive(true);
             gameoverText.gameObject.SetActive(true);
         }
-            
 
-        if (shieldHp <= 0)        
+        if (shieldHp <= 0)
             shieldBroken = true;
 
         if (shieldHp > 0)
             shieldBroken = false;
-
-        // check for shieldBroken in PlayerController script when spawning shield on spacebar
-        // check for gameOver in other scripts before enabling movement, spawning, animations
-        // if gameover load Restart screen
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

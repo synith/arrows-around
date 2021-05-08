@@ -5,25 +5,28 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public float
-        speed = 10000,
-        xRange = 13,
-        zRange = 13,
+    [SerializeField]
+    private float
+        speed,
+        xRange,
+        zRange,
         rotateSpeed;
+
     private Vector3 moveDirection;
     private Rigidbody playerRb;
-    public bool shieldUp;
-    private GameObject shieldObject;
+
     public int
         shieldHits,
         bodyHits;
-    [SerializeField] TextMeshProUGUI bodyText;
-    [SerializeField] TextMeshProUGUI shieldText;
+
+    public bool shieldUp;
+    private GameObject shieldObject;
+
     private Animator playerAnimator;
     private GameManager gameManager;
 
     // Start is called before the first frame update
-    void Start()
+    public void PlayerControllerStart()
     {
         playerRb = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
@@ -41,26 +44,22 @@ public class PlayerController : MonoBehaviour
         // Input
         PlayerInput();
 
-        if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
-        {
-            shieldUp = true;
-        }
-        else
-        {
-            shieldUp = false;
-        }
+        // Boundary
+        ConstrainPlayer();
 
-        if (!gameManager.gameOver)
-        {
-            bodyText.text = "Body: " + bodyHits;
-            shieldText.text = "Shield: " + shieldHits;
-        }
+
+        // Shield Block
+        if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
+            shieldUp = true;
+        else
+            shieldUp = false;
     }
     private void FixedUpdate()
     {
+        // if game not over
         if (!gameManager.gameOver)
         {
-            //if game manager script bool shielddestroyed is false then do this:
+            // if shield not broken, allow shield to spawn.
             if (!gameManager.shieldBroken)
                 shieldObject.SetActive(shieldUp);
             else
@@ -68,7 +67,6 @@ public class PlayerController : MonoBehaviour
 
             // Movement
             playerRb.AddForce(moveDirection * speed);
-            ConstrainPlayer();
 
             // Rotation
             RotateTowardsMovementDirection();
@@ -130,21 +128,13 @@ public class PlayerController : MonoBehaviour
             Debug.Log("So Stronk");
             --shieldHits;
 
-
             if (shieldHits < 0)
-            {
                 shieldHits = 0;
-            }
             else if (shieldHits > 5)
-            {
                 shieldHits = 5;
-            }
 
             if (gameManager.shieldHp >= 0 && gameManager.shieldHp < 5)
-            {
                 Destroy(other.gameObject);
-            }
-
         }
     }
 

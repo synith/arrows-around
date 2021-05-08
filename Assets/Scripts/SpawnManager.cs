@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject enemy;
-    public GameObject pickUp;
+    [SerializeField] private GameObject enemy;
+    [SerializeField] private GameObject pickUp;
 
     private GameManager gameManager;
 
-    public float spawnRange = 10;
-    public float pickUpSpawnRange = 8;
-    public float enemyDistance = 12;
-    public float pickUpDistance = 8;
+    [SerializeField]
+    private float
+        spawnRange = 10,
+        enemyDistance = 12,
+        enemySpawnRate = 3;
 
-    public float enemySpawnRate = 3;
-    public float pickUpSpawnRate = 5;
+    [SerializeField]
+    private float
+        pickUpSpawnRange = 8,
+        pickUpSpawnRate = 5,
+        pickUpDistance = 8;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+    }
+
+    // Start is called before the first frame update
+    public void SpawnManagerStart()
+    {
         InvokeRepeating("SpawnEnemy", 3f, enemySpawnRate);
         InvokeRepeating("SpawnPickUp", 5f, pickUpSpawnRate);
     }
@@ -56,6 +64,6 @@ public class SpawnManager : MonoBehaviour
             int randomIndex = Random.Range(0, 4);
             Instantiate(pickUp, spawnPosition[randomIndex], pickUp.transform.rotation);
         }
-        
+
     }
 }
