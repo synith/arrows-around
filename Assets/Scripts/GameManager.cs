@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     public int shieldHp = 5;
     public bool gameOver;
     public bool shieldBroken;
-    [SerializeField] private int playerMaxhp = 10;
-    [SerializeField] private int shieldMaxhp = 5;
+    public int playerMaxhp = 10;
+    public int shieldMaxhp = 5;
 
     [SerializeField] TextMeshProUGUI playerhpText;
     [SerializeField] TextMeshProUGUI shieldhpText;
@@ -32,8 +32,7 @@ public class GameManager : MonoBehaviour
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         
-        gameOver = false;
-        playerHp = 10;
+        gameOver = false;        
     }
 
     public void StartGame()

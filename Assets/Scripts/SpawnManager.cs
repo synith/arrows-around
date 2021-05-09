@@ -13,24 +13,22 @@ public class SpawnManager : MonoBehaviour
     private float
         spawnRange = 10,
         enemyDistance = 12,
-        enemySpawnRate = 3;
+        enemySpawnRate = 10;
 
     [SerializeField]
     private float
         pickUpSpawnRange = 8,
-        pickUpSpawnRate = 5,
-        pickUpDistance = 8;
+        pickUpSpawnRate = 30,
+        pickUpDistance = 9;
 
-    private void Start()
+    private void Awake()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
-
-    // Start is called before the first frame update
     public void SpawnManagerStart()
     {
-        InvokeRepeating("SpawnEnemy", 3f, enemySpawnRate);
-        InvokeRepeating("SpawnPickUp", 5f, pickUpSpawnRate);
+        InvokeRepeating("SpawnEnemy", 1f, enemySpawnRate);
+        InvokeRepeating("SpawnPickUp", pickUpSpawnRate, pickUpSpawnRate);
     }
     void SpawnEnemy()
     {

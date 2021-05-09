@@ -125,15 +125,14 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("PickUp"))
         {
-            Debug.Log("So Stronk");
             --shieldHits;
 
             if (shieldHits < 0)
                 shieldHits = 0;
-            else if (shieldHits > 5)
-                shieldHits = 5;
+            else if (shieldHits > gameManager.shieldMaxhp)
+                shieldHits = gameManager.shieldMaxhp;
 
-            if (gameManager.shieldHp >= 0 && gameManager.shieldHp < 5)
+            if (gameManager.shieldHp >= 0 && gameManager.shieldHp < gameManager.shieldMaxhp)
                 Destroy(other.gameObject);
         }
     }
