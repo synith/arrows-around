@@ -11,26 +11,28 @@ public class ArrowCollision : MonoBehaviour
     private void Awake()
     {
         arrowController = gameObject.GetComponent<ArrowController>();
-    }    
+    }
     void Start()
     {
         arrowHit = false;
-    }    
+    }
     private void OnCollisionEnter(Collision collision)
     {
         foreach (ContactPoint contact in collision.contacts)
-        {            
+        {
             if (contact.otherCollider.CompareTag("Shield") && !arrowHit)
             {
-                ++arrowController.playerController.shieldHits;
-                Debug.Log("Shield Hit");
+                if (!arrowController.gameManager.gameOver)
+                    ++arrowController.playerController.shieldHits;
+
                 ArrowHit();
                 StartCoroutine(DespawnArrow());
             }
             else if (contact.otherCollider.CompareTag("Body") && !arrowHit)
             {
-                ++arrowController.playerController.bodyHits;
-                Debug.Log("Body Hit");
+                if (!arrowController.gameManager.gameOver)
+                    ++arrowController.playerController.bodyHits;
+
                 ArrowHit();
                 StartCoroutine(DespawnArrow());
             }
@@ -40,6 +42,7 @@ public class ArrowCollision : MonoBehaviour
                 StartCoroutine(DespawnArrow());
             }
         }
+
     }
     private void ArrowHit()
     {

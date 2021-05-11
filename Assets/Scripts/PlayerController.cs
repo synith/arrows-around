@@ -1,27 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public float
-        speed = 10000,
-        xRange = 13,
-        zRange = 13,
+    [SerializeField]
+    private float
+        speed,
+        xRange,
+        zRange,
         rotateSpeed;
+
     private Vector3 moveDirection;
-    private Rigidbody playerRb;    
-    public bool shieldUp;
-    private GameObject shieldObject;
+    private Rigidbody playerRb;
+
     public int
         shieldHits,
         bodyHits;
 
+    public bool shieldUp;
+    private GameObject shieldObject;
+
+    private Animator playerAnimator;
+    private GameManager gameManager;
+
     // Start is called before the first frame update
-    void Start()
+    public void PlayerControllerStart()
     {
         playerRb = GetComponent<Rigidbody>();
+        playerAnimator = GetComponent<Animator>();
         shieldObject = GameObject.Find("Shield");
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         shieldUp = false;
         shieldHits = 0;
         bodyHits = 0;
@@ -34,26 +44,38 @@ public class PlayerController : MonoBehaviour
         // Input
         PlayerInput();
 
+        // Boundary
+        ConstrainPlayer();
+
+
+
+
+
+
+        // Shield Block
         if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
-        {
-            shieldUp = true;            
-        }
+            shieldUp = true;
         else
-        {
             shieldUp = false;
-        }
-        
     }
     private void FixedUpdate()
     {
-        shieldObject.SetActive(shieldUp);
+        // if game not over
+        if (!gameManager.gameOver)
+        {
+            // if shield not broken, allow shield to spawn.
+            if (!gameManager.shieldBroken)
+                shieldObject.SetActive(shieldUp);
+            else
+                shieldObject.SetActive(false);
 
-        // Movement
-        playerRb.AddForce(moveDirection * speed);
-        ConstrainPlayer();
+            // Movement
+            playerRb.AddForce(moveDirection * speed);
 
-        // Rotation
-        RotateTowardsMovementDirection();        
+            // Rotation
+            RotateTowardsMovementDirection();
+        }
+
     }
 
     // Rotates player to direction they are moving in
@@ -62,6 +84,8 @@ public class PlayerController : MonoBehaviour
         // if moving in a direction
         if (moveDirection.magnitude != 0)
         {
+            playerAnimator.SetTrigger("walking_trig");
+
             // Quaternion using vector to represent where we want to rotate to
             Quaternion rotatePlayer = Quaternion.LookRotation(moveDirection);
 
@@ -70,8 +94,8 @@ public class PlayerController : MonoBehaviour
             playerRb.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed));
 
             // Without physics:
-            //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);
-        }
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);            
+        }        
     }
 
     // Sets horizontal and vertical input as a vector
@@ -80,32 +104,38 @@ public class PlayerController : MonoBehaviour
         // a vector based on our x and y input
         moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         moveDirection.Normalize();
-        
     }
 
-    
+
     // If the player goes outside of boundary set player position to the boundary
     private void ConstrainPlayer()
     {
-        if (transform.position.x < -xRange)        
-            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);        
+        if (transform.position.x < -xRange)
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
         if (transform.position.x > xRange)
-            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);        
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
         if (transform.position.z < -zRange)
             transform.position = new Vector3(transform.position.x, transform.position.y, -zRange);
         if (transform.position.z > zRange)
-            transform.position = new Vector3(transform.position.x, transform.position.y, zRange);        
+            transform.position = new Vector3(transform.position.x, transform.position.y, zRange);
     }
 
-    
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PickUp"))
         {
-            Debug.Log("So Stronk");
-            Destroy(other.gameObject);
+            --shieldHits;
+
+            if (shieldHits < 0)
+                shieldHits = 0;
+            else if (shieldHits > gameManager.shieldMaxhp)
+                shieldHits = gameManager.shieldMaxhp;
+
+            if (gameManager.shieldHp >= 0 && gameManager.shieldHp < gameManager.shieldMaxhp)
+                Destroy(other.gameObject);
         }
     }
-    
+
 }
