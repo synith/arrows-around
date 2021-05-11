@@ -48,6 +48,10 @@ public class PlayerController : MonoBehaviour
         ConstrainPlayer();
 
 
+
+
+
+
         // Shield Block
         if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
             shieldUp = true;
@@ -80,6 +84,8 @@ public class PlayerController : MonoBehaviour
         // if moving in a direction
         if (moveDirection.magnitude != 0)
         {
+            playerAnimator.SetTrigger("walking_trig");
+
             // Quaternion using vector to represent where we want to rotate to
             Quaternion rotatePlayer = Quaternion.LookRotation(moveDirection);
 
@@ -88,13 +94,8 @@ public class PlayerController : MonoBehaviour
             playerRb.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed));
 
             // Without physics:
-            //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);
-
-
-            playerAnimator.SetBool("moving_b", true);
-        }
-        else
-            playerAnimator.SetBool("moving_b", false);
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);            
+        }        
     }
 
     // Sets horizontal and vertical input as a vector
