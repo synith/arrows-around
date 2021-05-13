@@ -9,10 +9,11 @@ public class ArrowMovement : MonoBehaviour
     public float torque = 2f;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         arrowRigidbody = GetComponent<Rigidbody>();
     }
+    
     
     // Add forward force and torque to arrow modified with speed
     public void MoveArrow()

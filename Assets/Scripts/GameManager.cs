@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public int playerHp = 10;
     public int shieldHp = 5;
     public bool gameOver;
+    public bool gameStarted;
     public bool shieldBroken;
     public int playerMaxhp = 10;
     public int shieldMaxhp = 5;
@@ -28,11 +29,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // find player controller script and assign it to our variable
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         
-        gameOver = false;        
+        gameOver = false;
+        gameStarted = false;
     }
 
     public void StartGame()
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
         spawnManager.SpawnManagerStart();
         playerController.PlayerControllerStart();
         titleScreen.SetActive(false);
+        gameStarted = true;
     }
 
     // Update is called once per frame
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
         if (playerHp < 1)
         {
             gameOver = true;
+            playerController.isDead = true;
             restartButton.gameObject.SetActive(true);
             gameoverText.gameObject.SetActive(true);
         }

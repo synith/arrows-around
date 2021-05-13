@@ -8,9 +8,14 @@ public class ArrowCollision : MonoBehaviour
     private bool arrowHit;
     private ArrowController arrowController;
 
+    private AudioSource arrowAudio;
+    [SerializeField]private AudioClip arrowShield;
+    [SerializeField]private AudioClip arrowFlesh;
+
     private void Awake()
     {
-        arrowController = gameObject.GetComponent<ArrowController>();
+        arrowController = GetComponent<ArrowController>();
+        arrowAudio = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -26,6 +31,7 @@ public class ArrowCollision : MonoBehaviour
                     ++arrowController.playerController.shieldHits;
 
                 ArrowHit();
+                arrowAudio.PlayOneShot(arrowShield, 0.1f);
                 StartCoroutine(DespawnArrow());
             }
             else if (contact.otherCollider.CompareTag("Body") && !arrowHit)
@@ -34,12 +40,16 @@ public class ArrowCollision : MonoBehaviour
                     ++arrowController.playerController.bodyHits;
 
                 ArrowHit();
+                arrowAudio.PlayOneShot(arrowFlesh, 0.1f);
+                arrowController.playerController.isHit = true;
                 StartCoroutine(DespawnArrow());
             }
             else if (!arrowHit)
             {
                 ArrowHit();
                 StartCoroutine(DespawnArrow());
+
+                // play arrow hitting eachother noise here
             }
         }
 

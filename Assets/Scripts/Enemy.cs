@@ -4,25 +4,39 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private GameObject player;
-    private Rigidbody enemyRigidbody;
+
     [SerializeField] private float rotateSpeed;
     [SerializeField] private float enemyShootDelay;
+    private GameObject player;
+    private Rigidbody enemyRigidbody;
     public GameObject arrowPrefab;
+    [SerializeField] private AudioClip enemySpawnSound;
+    [SerializeField] private AudioClip enemyDrawSound;
+    [SerializeField] private AudioClip enemyShootSound;
+    private AudioSource enemyAudio;
     private Animator enemyAnimator;
-
     private GameManager gameManager;
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         player = GameObject.Find("Player");
         enemyRigidbody = GetComponent<Rigidbody>();
-        enemyShootDelay = Random.Range(1.5f, 3f);
         enemyAnimator = GetComponent<Animator>();
-        InvokeRepeating("Shoot", enemyShootDelay, enemyShootDelay);
+        enemyAudio = GetComponent<AudioSource>();
     }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        enemyShootDelay = Random.Range(1.5f, 3f);
+        InvokeRepeating("Shoot", enemyShootDelay, enemyShootDelay);
+        InvokeRepeating("ShootSound", enemyShootDelay - 0.3f, enemyShootDelay);
+        enemyAudio.PlayOneShot(enemySpawnSound, 0.1f);
+    }
+
     // Physics Update()
     private void FixedUpdate()
     {
@@ -32,9 +46,18 @@ public class Enemy : MonoBehaviour
     {
         if (!gameManager.gameOver)
         {
-            enemyAnimator.SetTrigger("shoot_trig");
+            enemyAudio.PlayOneShot(enemyShootSound, 0.1f);
             Instantiate(arrowPrefab, new Vector3(transform.position.x, 1.5f, transform.position.z), transform.rotation);
         }
+    }
+    void ShootSound()
+    {
+        if (!gameManager.gameOver)
+        {
+            enemyAnimator.SetTrigger("shoot_trig");
+            enemyAudio.PlayOneShot(enemyDrawSound, 0.1f);
+        }
+
     }
     void RotateTowardsPlayer()
     {
@@ -49,11 +72,12 @@ public class Enemy : MonoBehaviour
 
 
 
-        // If not using physics:
-
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateEnemy, rotateSpeed);
-        // If not caring about rotation speed:
-        //transform.LookAt(lookDirection);
+        /* If not using physics:
+         * transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateEnemy, rotateSpeed);
+         * 
+         * If not caring about rotation speed:
+         * transform.LookAt(lookDirection);
+         */
     }
 
 }

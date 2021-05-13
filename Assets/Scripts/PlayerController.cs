@@ -25,14 +25,28 @@ public class PlayerController : MonoBehaviour
     private Animator playerAnimator;
     private GameManager gameManager;
 
+    public AudioSource playerAudio;
+    [SerializeField] public AudioClip deathSound;
+    [SerializeField] public AudioClip hitSound;
+
+    public bool isDead;
+    public bool isHit;
+
+    private void Awake()
+    {
+        playerAnimator = GetComponent<Animator>();
+        playerAudio = GetComponent<AudioSource>();
+        shieldObject = GameObject.Find("Shield");
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+    }
+
     // Start is called before the first frame update
     public void PlayerControllerStart()
     {
         playerRb = GetComponent<Rigidbody>();
-        playerAnimator = GetComponent<Animator>();
-        shieldObject = GameObject.Find("Shield");
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        isDead = false;
         shieldUp = false;
+        isHit = false;
         shieldHits = 0;
         bodyHits = 0;
         shieldObject.SetActive(false);
@@ -47,11 +61,6 @@ public class PlayerController : MonoBehaviour
         // Boundary
         ConstrainPlayer();
 
-
-
-
-
-
         // Shield Block
         if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
             shieldUp = true;
@@ -61,7 +70,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         // if game not over
-        if (!gameManager.gameOver)
+        if (!gameManager.gameOver && gameManager.gameStarted)
         {
             // if shield not broken, allow shield to spawn.
             if (!gameManager.shieldBroken)
@@ -74,6 +83,19 @@ public class PlayerController : MonoBehaviour
 
             // Rotation
             RotateTowardsMovementDirection();
+        }
+
+        if (isHit)
+        {
+            if (isDead)
+            {
+                playerAudio.PlayOneShot(deathSound, 0.1f);
+            }
+            else
+            {
+                playerAudio.PlayOneShot(hitSound, 0.2f);
+            }
+            isHit = false;
         }
 
     }
@@ -95,7 +117,7 @@ public class PlayerController : MonoBehaviour
 
             // Without physics:
             //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);            
-        }        
+        }
     }
 
     // Sets horizontal and vertical input as a vector

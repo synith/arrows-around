@@ -5,6 +5,7 @@ using UnityEngine;
 public class ArrowController : MonoBehaviour
 {
     private ArrowBoundary arrowBoundary;
+    private ArrowCollision arrowCollision;
     public ArrowMovement arrowMovement;
     public PlayerController playerController;
     public GameManager gameManager;
@@ -12,9 +13,10 @@ public class ArrowController : MonoBehaviour
     {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        arrowBoundary = gameObject.GetComponent<ArrowBoundary>();
-        arrowMovement = gameObject.GetComponent<ArrowMovement>();
-    }    
+        arrowBoundary = GetComponent<ArrowBoundary>();
+        arrowMovement = GetComponent<ArrowMovement>();
+        arrowCollision = GetComponent<ArrowCollision>();
+    }
     private void FixedUpdate()
     {
         arrowBoundary.DestroyOutOfBounds();
@@ -22,6 +24,9 @@ public class ArrowController : MonoBehaviour
         {
             arrowMovement.MoveArrow();
         }
-        
+        else
+        {
+            arrowCollision.StartCoroutine("DespawnArrow");
+        }
     }
 }
