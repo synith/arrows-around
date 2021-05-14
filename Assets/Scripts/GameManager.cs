@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
             playerController.isDead = true;
             restartButton.gameObject.SetActive(true);
             gameoverText.gameObject.SetActive(true);
+            playerHp = 0;
         }
 
         if (shieldHp <= 0)

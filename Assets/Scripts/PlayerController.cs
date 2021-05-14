@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isDead;
     public bool isHit;
+    private bool deathCry = false;
 
     private void Awake()
     {
@@ -89,7 +90,11 @@ public class PlayerController : MonoBehaviour
         {
             if (isDead)
             {
-                playerAudio.PlayOneShot(deathSound, 0.1f);
+                if (!deathCry)
+                {
+                    playerAudio.PlayOneShot(deathSound, 0.1f);
+                    deathCry = true;
+                }                
             }
             else
             {
@@ -106,7 +111,7 @@ public class PlayerController : MonoBehaviour
         // if moving in a direction
         if (moveDirection.magnitude != 0)
         {
-            playerAnimator.SetTrigger("walking_trig");
+            playerAnimator.SetTrigger("walking_trig");            
 
             // Quaternion using vector to represent where we want to rotate to
             Quaternion rotatePlayer = Quaternion.LookRotation(moveDirection);
