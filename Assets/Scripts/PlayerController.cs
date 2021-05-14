@@ -21,24 +21,37 @@ public class PlayerController : MonoBehaviour
 
     public bool shieldUp;
     private GameObject shieldObject;
+    private GameObject bodyObject;
 
     private Animator playerAnimator;
     private GameManager gameManager;
 
     public AudioSource playerAudio;
-    [SerializeField] public AudioClip deathSound;
-    [SerializeField] public AudioClip hitSound;
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip hitSound;
 
     public bool isDead;
     public bool isHit;
-    private bool deathCry = false;
+    private bool deathCry;
+
+    [SerializeField] private ParticleSystem bloodParticle;
+    [SerializeField] private ParticleSystem deathParticle;
+
+    
+    private bool shieldBroken;
+    private readonly int playerMaxhp = 5;
+    private readonly int shieldMaxhp = 3;
+    private int playerHp = 5;
+    private int shieldHp = 3;
+
 
     private void Awake()
     {
         playerAnimator = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
         shieldObject = GameObject.Find("Shield");
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        bodyObject = GameObject.Find("Body");
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();        
     }
 
     // Start is called before the first frame update
@@ -46,8 +59,9 @@ public class PlayerController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         isDead = false;
+        deathCry = false;
         shieldUp = false;
-        isHit = false;
+        isHit = false;        
         shieldHits = 0;
         bodyHits = 0;
         shieldObject.SetActive(false);
@@ -66,15 +80,41 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1"))
             shieldUp = true;
         else
-            shieldUp = false;
+            shieldUp = false;        
     }
     private void FixedUpdate()
     {
+        playerHp = playerMaxhp - bodyHits;
+        shieldHp = shieldMaxhp - shieldHits;
+
+        gameManager.playerhpText.text = "HP: " + playerHp;
+        gameManager.shieldhpText.text = "Shield HP: " + shieldHp;
+
+        if (playerHp < 1)
+        {
+            gameManager.gameOver = true;
+            isDead = true;
+            gameManager.restartButton.gameObject.SetActive(true);
+            gameManager.gameoverText.gameObject.SetActive(true);
+            playerHp = 0;
+        }
+
+        if (shieldHp <= 0)
+            shieldBroken = true;
+
+        if (shieldHp > 0)
+            shieldBroken = false;
+
+
+
+
+
+
         // if game not over
         if (!gameManager.gameOver && gameManager.gameStarted)
         {
             // if shield not broken, allow shield to spawn.
-            if (!gameManager.shieldBroken)
+            if (!shieldBroken)
                 shieldObject.SetActive(shieldUp);
             else
                 shieldObject.SetActive(false);
@@ -93,16 +133,18 @@ public class PlayerController : MonoBehaviour
                 if (!deathCry)
                 {
                     playerAudio.PlayOneShot(deathSound, 0.1f);
+                    deathParticle.Play();
+                    bodyObject.SetActive(false);
                     deathCry = true;
-                }                
+                }
             }
             else
             {
                 playerAudio.PlayOneShot(hitSound, 0.2f);
-            }
-            isHit = false;
+                bloodParticle.Play();
+                isHit = false;
+            }            
         }
-
     }
 
     // Rotates player to direction they are moving in
@@ -157,10 +199,10 @@ public class PlayerController : MonoBehaviour
 
             if (shieldHits < 0)
                 shieldHits = 0;
-            else if (shieldHits > gameManager.shieldMaxhp)
-                shieldHits = gameManager.shieldMaxhp;
+            else if (shieldHits > shieldMaxhp)
+                shieldHits = shieldMaxhp;
 
-            if (gameManager.shieldHp >= 0 && gameManager.shieldHp < gameManager.shieldMaxhp)
+            if (shieldHp >= 0 && shieldHp < shieldMaxhp)
                 Destroy(other.gameObject);
         }
     }

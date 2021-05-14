@@ -12,6 +12,8 @@ public class ArrowCollision : MonoBehaviour
     [SerializeField]private AudioClip arrowShield;
     [SerializeField]private AudioClip arrowFlesh;
 
+    [SerializeField] private ParticleSystem sparkParticle;
+
     private void Awake()
     {
         arrowController = GetComponent<ArrowController>();
@@ -32,6 +34,7 @@ public class ArrowCollision : MonoBehaviour
 
                 ArrowHit();
                 arrowAudio.PlayOneShot(arrowShield, 0.1f);
+                sparkParticle.Play();
                 StartCoroutine(DespawnArrow());
             }
             else if (contact.otherCollider.CompareTag("Body") && !arrowHit)

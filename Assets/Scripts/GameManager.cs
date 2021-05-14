@@ -7,17 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public int playerHp = 10;
-    public int shieldHp = 5;
+    
     public bool gameOver;
-    public bool gameStarted;
-    public bool shieldBroken;
-    public int playerMaxhp = 10;
-    public int shieldMaxhp = 5;
+    public bool gameStarted;    
 
-    [SerializeField] TextMeshProUGUI playerhpText;
-    [SerializeField] TextMeshProUGUI shieldhpText;
-    [SerializeField] TextMeshProUGUI gameoverText;
+    public TextMeshProUGUI playerhpText;
+    public TextMeshProUGUI shieldhpText;
+    public TextMeshProUGUI gameoverText;
 
     public Button restartButton;
     public GameObject titleScreen;
@@ -42,31 +38,6 @@ public class GameManager : MonoBehaviour
         playerController.PlayerControllerStart();
         titleScreen.SetActive(false);
         gameStarted = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        playerHp = playerMaxhp - playerController.bodyHits;
-        shieldHp = shieldMaxhp - playerController.shieldHits;
-
-        playerhpText.text = "HP: " + playerHp;
-        shieldhpText.text = "Shield HP: " + shieldHp;
-
-        if (playerHp < 1)
-        {
-            gameOver = true;
-            playerController.isDead = true;
-            restartButton.gameObject.SetActive(true);
-            gameoverText.gameObject.SetActive(true);
-            playerHp = 0;
-        }
-
-        if (shieldHp <= 0)
-            shieldBroken = true;
-
-        if (shieldHp > 0)
-            shieldBroken = false;
     }
     public void RestartGame()
     {
