@@ -29,13 +29,18 @@ public class PlayerController : MonoBehaviour
     public AudioSource playerAudio;
     [SerializeField] private AudioClip deathSound;
     [SerializeField] private AudioClip hitSound;
+    [SerializeField] private AudioClip pickupSound;
 
     public bool isDead;
     public bool isHit;
+    public bool shieldIsHit;
     private bool deathCry;
 
     [SerializeField] private ParticleSystem bloodParticle;
     [SerializeField] private ParticleSystem deathParticle;
+
+    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private HealthBar shieldbar;
 
     
     private bool shieldBroken;
@@ -61,10 +66,13 @@ public class PlayerController : MonoBehaviour
         isDead = false;
         deathCry = false;
         shieldUp = false;
-        isHit = false;        
+        isHit = false;
+        shieldIsHit = false;
         shieldHits = 0;
         bodyHits = 0;
         shieldObject.SetActive(false);
+        healthBar.SetMaxHealth(playerMaxhp);
+        shieldbar.SetMaxHealth(shieldMaxhp);
     }
 
     // Update is called once per frame
@@ -93,6 +101,7 @@ public class PlayerController : MonoBehaviour
         if (playerHp < 1)
         {
             gameManager.gameOver = true;
+            TimerController.instance.EndTimer();
             isDead = true;
             gameManager.restartButton.gameObject.SetActive(true);
             gameManager.gameoverText.gameObject.SetActive(true);
@@ -128,6 +137,8 @@ public class PlayerController : MonoBehaviour
 
         if (isHit)
         {
+            healthBar.SetHealth(playerHp);
+            
             if (isDead)
             {
                 if (!deathCry)
@@ -144,6 +155,11 @@ public class PlayerController : MonoBehaviour
                 bloodParticle.Play();
                 isHit = false;
             }            
+        }
+        if (shieldIsHit)
+        {
+            shieldbar.SetHealth(shieldHp);
+            shieldIsHit = false;
         }
     }
 
@@ -203,7 +219,12 @@ public class PlayerController : MonoBehaviour
                 shieldHits = shieldMaxhp;
 
             if (shieldHp >= 0 && shieldHp < shieldMaxhp)
+            {
                 Destroy(other.gameObject);
+                shieldIsHit = true;
+                playerAudio.PlayOneShot(pickupSound, 0.3f);
+            }
+                
         }
     }
 

@@ -22,12 +22,17 @@ public class GameManager : MonoBehaviour
     private PlayerController playerController;
     private SpawnManager spawnManager;
 
+
+    private AudioSource buttonAudio;
+    [SerializeField] private AudioClip buttonClick;
+
     // Start is called before the first frame update
     void Start()
     {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
-        
+        buttonAudio = GetComponent<AudioSource>();
+
         gameOver = false;
         gameStarted = false;
     }
@@ -38,9 +43,12 @@ public class GameManager : MonoBehaviour
         playerController.PlayerControllerStart();
         titleScreen.SetActive(false);
         gameStarted = true;
+        buttonAudio.PlayOneShot(buttonClick, 0.3f);
+        TimerController.instance.BeginTimer();
     }
     public void RestartGame()
     {
+        buttonAudio.PlayOneShot(buttonClick, 0.3f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

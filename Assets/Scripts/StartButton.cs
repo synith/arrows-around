@@ -7,16 +7,15 @@ public class StartButton : MonoBehaviour
 {
     private Button button;
     private GameManager gameManager;
-
-    private void Start()
+    private void Awake()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(ButtonPushed);
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();        
     }
 
     private void ButtonPushed()
-    {
+    {        
         gameManager.StartGame();
     }
 }

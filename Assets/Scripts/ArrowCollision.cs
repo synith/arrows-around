@@ -12,7 +12,7 @@ public class ArrowCollision : MonoBehaviour
     [SerializeField]private AudioClip arrowShield;
     [SerializeField]private AudioClip arrowFlesh;
 
-    [SerializeField] private ParticleSystem sparkParticle;
+    [SerializeField] private ParticleSystem sparkParticle;    
 
     private void Awake()
     {
@@ -34,6 +34,7 @@ public class ArrowCollision : MonoBehaviour
 
                 ArrowHit();
                 arrowAudio.PlayOneShot(arrowShield, 0.1f);
+                arrowController.playerController.shieldIsHit = true;
                 sparkParticle.Play();
                 StartCoroutine(DespawnArrow());
             }
