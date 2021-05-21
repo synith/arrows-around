@@ -27,8 +27,8 @@ public class SpawnManager : MonoBehaviour
     }
     public void SpawnManagerStart()
     {
-        InvokeRepeating("SpawnEnemy", 1f, enemySpawnRate);
-        InvokeRepeating("SpawnPickUp", pickUpSpawnRate, pickUpSpawnRate);
+        InvokeRepeating(nameof(SpawnEnemy), 1f, enemySpawnRate);
+        InvokeRepeating(nameof(SpawnPickUp), pickUpSpawnRate, pickUpSpawnRate);
     }
     void SpawnEnemy()
     {

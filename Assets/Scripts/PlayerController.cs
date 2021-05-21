@@ -92,32 +92,11 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        playerHp = playerMaxhp - bodyHits;
-        shieldHp = shieldMaxhp - shieldHits;
+        CheckPlayerHP();
+        CheckShieldHP();
 
         gameManager.playerhpText.text = "HP: " + playerHp;
         gameManager.shieldhpText.text = "Shield HP: " + shieldHp;
-
-        if (playerHp < 1)
-        {
-            gameManager.gameOver = true;
-            TimerController.instance.EndTimer();
-            isDead = true;
-            gameManager.restartButton.gameObject.SetActive(true);
-            gameManager.gameoverText.gameObject.SetActive(true);
-            playerHp = 0;
-        }
-
-        if (shieldHp <= 0)
-            shieldBroken = true;
-
-        if (shieldHp > 0)
-            shieldBroken = false;
-
-
-
-
-
 
         // if game not over
         if (!gameManager.gameOver && gameManager.gameStarted)
@@ -135,34 +114,8 @@ public class PlayerController : MonoBehaviour
             RotateTowardsMovementDirection();
         }
 
-        if (isHit)
-        {
-            healthBar.SetHealth(playerHp);
-            
-            if (isDead)
-            {
-                if (!deathCry)
-                {
-                    playerAudio.PlayOneShot(deathSound, 0.1f);
-                    deathParticle.Play();
-                    bodyObject.SetActive(false);
-                    deathCry = true;
-                }
-            }
-            else
-            {
-                playerAudio.PlayOneShot(hitSound, 0.2f);
-                bloodParticle.Play();
-                isHit = false;
-            }            
-        }
-        if (shieldIsHit)
-        {
-            shieldbar.SetHealth(shieldHp);
-            shieldIsHit = false;
-        }
+        CheckIfHit();
     }
-
     // Rotates player to direction they are moving in
     private void RotateTowardsMovementDirection()
     {
@@ -182,7 +135,6 @@ public class PlayerController : MonoBehaviour
             //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotatePlayer, rotateSpeed);            
         }
     }
-
     // Sets horizontal and vertical input as a vector
     private void PlayerInput()
     {
@@ -190,8 +142,6 @@ public class PlayerController : MonoBehaviour
         moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         moveDirection.Normalize();
     }
-
-
     // If the player goes outside of boundary set player position to the boundary
     private void ConstrainPlayer()
     {
@@ -204,9 +154,59 @@ public class PlayerController : MonoBehaviour
         if (transform.position.z > zRange)
             transform.position = new Vector3(transform.position.x, transform.position.y, zRange);
     }
+    private void CheckPlayerHP()
+    {
+        playerHp = playerMaxhp - bodyHits;
 
+        if (playerHp < 1)
+        {
+            gameManager.gameOver = true;
+            TimerController.instance.EndTimer();
+            isDead = true;
+            gameManager.restartButton.gameObject.SetActive(true);
+            gameManager.gameoverText.gameObject.SetActive(true);
+            playerHp = 0;
+        }
+    }
+    private void CheckShieldHP()
+    {
+        shieldHp = shieldMaxhp - shieldHits;
 
+        if (shieldHp <= 0)
+            shieldBroken = true;
 
+        if (shieldHp > 0)
+            shieldBroken = false;
+    }
+    private void CheckIfHit()
+    {
+        if (isHit)
+        {
+            healthBar.SetHealth(playerHp);
+
+            if (isDead)
+            {
+                if (!deathCry)
+                {
+                    playerAudio.PlayOneShot(deathSound, 0.1f);
+                    deathParticle.Play();
+                    bodyObject.SetActive(false);
+                    deathCry = true;
+                }
+            }
+            else
+            {
+                playerAudio.PlayOneShot(hitSound, 0.2f);
+                bloodParticle.Play();
+                isHit = false;
+            }
+        }
+        if (shieldIsHit)
+        {
+            shieldbar.SetHealth(shieldHp);
+            shieldIsHit = false;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PickUp"))
@@ -223,9 +223,7 @@ public class PlayerController : MonoBehaviour
                 Destroy(other.gameObject);
                 shieldIsHit = true;
                 playerAudio.PlayOneShot(pickupSound, 0.3f);
-            }
-                
+            }                
         }
     }
-
 }
