@@ -93,10 +93,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         CheckPlayerHP();
-        CheckShieldHP();
-
-        gameManager.playerhpText.text = "HP: " + playerHp;
-        gameManager.shieldhpText.text = "Shield HP: " + shieldHp;
+        CheckShieldHP();       
 
         // if game not over
         if (!gameManager.gameOver && gameManager.gameStarted)
@@ -188,15 +185,16 @@ public class PlayerController : MonoBehaviour
             {
                 if (!deathCry)
                 {
-                    playerAudio.PlayOneShot(deathSound, 0.1f);
+                    playerAudio.PlayOneShot(deathSound, 0.1f * gameManager.volume);
                     deathParticle.Play();
                     bodyObject.SetActive(false);
+                    shieldObject.SetActive(false);
                     deathCry = true;
                 }
             }
             else
             {
-                playerAudio.PlayOneShot(hitSound, 0.2f);
+                playerAudio.PlayOneShot(hitSound, 0.2f * gameManager.volume);
                 bloodParticle.Play();
                 isHit = false;
             }
@@ -222,7 +220,7 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(other.gameObject);
                 shieldIsHit = true;
-                playerAudio.PlayOneShot(pickupSound, 0.3f);
+                playerAudio.PlayOneShot(pickupSound, 0.3f * gameManager.volume);
             }                
         }
     }

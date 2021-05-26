@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
         enemyShootDelay = Random.Range(1.5f, 3f);
         InvokeRepeating("Shoot", enemyShootDelay, enemyShootDelay);
         InvokeRepeating("ShootSound", enemyShootDelay - 0.3f, enemyShootDelay);
-        enemyAudio.PlayOneShot(enemySpawnSound, 0.1f);
+        enemyAudio.PlayOneShot(enemySpawnSound, 0.1f * gameManager.volume);
     }
 
     // Physics Update()
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
     {
         if (!gameManager.gameOver)
         {
-            enemyAudio.PlayOneShot(enemyShootSound, 0.1f);
+            enemyAudio.PlayOneShot(enemyShootSound, 0.1f * gameManager.volume);
             Instantiate(arrowPrefab, new Vector3(transform.position.x, 1.5f, transform.position.z), transform.rotation);
         }
     }
@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
         if (!gameManager.gameOver)
         {
             enemyAnimator.SetTrigger("shoot_trig");
-            enemyAudio.PlayOneShot(enemyDrawSound, 0.1f);
+            enemyAudio.PlayOneShot(enemyDrawSound, 0.1f * gameManager.volume);
         }
 
     }

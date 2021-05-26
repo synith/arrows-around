@@ -33,7 +33,7 @@ public class ArrowCollision : MonoBehaviour
                     ++arrowController.playerController.shieldHits;
 
                 ArrowHit();
-                arrowAudio.PlayOneShot(arrowShield, 0.1f);
+                arrowAudio.PlayOneShot(arrowShield, 0.1f * arrowController.gameManager.volume);
                 arrowController.playerController.shieldIsHit = true;
                 sparkParticle.Play();
                 StartCoroutine(DespawnArrow());
@@ -44,7 +44,7 @@ public class ArrowCollision : MonoBehaviour
                     ++arrowController.playerController.bodyHits;
 
                 ArrowHit();
-                arrowAudio.PlayOneShot(arrowFlesh, 0.1f);
+                arrowAudio.PlayOneShot(arrowFlesh, 0.1f * arrowController.gameManager.volume);
                 arrowController.playerController.isHit = true;
                 StartCoroutine(DespawnArrow());
             }

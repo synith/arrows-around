@@ -18,7 +18,7 @@ public class ArrowMovement : MonoBehaviour
     // Add forward force and torque to arrow modified with speed
     public void MoveArrow()
     {
-        arrowRigidbody.AddRelativeForce(Vector3.forward * speed);
+        arrowRigidbody.AddRelativeForce(Vector3.forward * speed, ForceMode.VelocityChange);
         arrowRigidbody.AddRelativeTorque(0, 0, torque);
     }
 }

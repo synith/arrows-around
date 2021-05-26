@@ -9,14 +9,16 @@ public class GameManager : MonoBehaviour
 {
     
     public bool gameOver;
-    public bool gameStarted;    
+    public bool gameStarted;
 
-    public TextMeshProUGUI playerhpText;
-    public TextMeshProUGUI shieldhpText;
     public TextMeshProUGUI gameoverText;
-
     public Button restartButton;
     public GameObject titleScreen;
+    
+    [SerializeField]
+    private Slider volumeSlider;
+
+    public float volume;
 
     // gain access to player script for shield and body hits
     private PlayerController playerController;
@@ -37,13 +39,18 @@ public class GameManager : MonoBehaviour
         gameStarted = false;
     }
 
+    private void Update()
+    {
+        volume = volumeSlider.value;
+    }
+
     public void StartGame()
     {
         spawnManager.SpawnManagerStart();
         playerController.PlayerControllerStart();
         titleScreen.SetActive(false);
         gameStarted = true;
-        buttonAudio.PlayOneShot(buttonClick, 0.3f);
+        buttonAudio.PlayOneShot(buttonClick, 0.3f * volume);
         TimerController.instance.BeginTimer();
     }
     public void RestartGame()
