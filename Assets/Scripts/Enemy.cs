@@ -9,7 +9,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float enemyShootDelay;
     private GameObject player;
     private Rigidbody enemyRigidbody;
-    public GameObject arrowPrefab;
     [SerializeField] private AudioClip enemySpawnSound;
     [SerializeField] private AudioClip enemyDrawSound;
     [SerializeField] private AudioClip enemyShootSound;
@@ -26,17 +25,14 @@ public class Enemy : MonoBehaviour
         enemyAnimator = GetComponent<Animator>();
         enemyAudio = GetComponent<AudioSource>();
     }
-
-
     // Start is called before the first frame update
     void Start()
     {
         enemyShootDelay = Random.Range(1.5f, 3f);
-        InvokeRepeating("Shoot", enemyShootDelay, enemyShootDelay);
-        InvokeRepeating("ShootSound", enemyShootDelay - 0.3f, enemyShootDelay);
+        InvokeRepeating(nameof(Shoot), enemyShootDelay, enemyShootDelay);
+        InvokeRepeating(nameof(ShootSound), enemyShootDelay - 0.3f, enemyShootDelay);
         enemyAudio.PlayOneShot(enemySpawnSound, 0.1f * gameManager.volume);
     }
-
     // Physics Update()
     private void FixedUpdate()
     {
@@ -47,7 +43,17 @@ public class Enemy : MonoBehaviour
         if (!gameManager.gameOver)
         {
             enemyAudio.PlayOneShot(enemyShootSound, 0.1f * gameManager.volume);
-            Instantiate(arrowPrefab, new Vector3(transform.position.x, 1.5f, transform.position.z), transform.rotation);
+            ShootPooledObject();            
+        }
+    }
+    void ShootPooledObject()
+    {
+        GameObject arrow = ObjectPool.SharedInstance.GetPooledObject();
+        if (arrow != null)
+        {
+            arrow.transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
+            arrow.transform.rotation = transform.rotation;
+            arrow.SetActive(true);
         }
     }
     void ShootSound()
@@ -57,7 +63,6 @@ public class Enemy : MonoBehaviour
             enemyAnimator.SetTrigger("shoot_trig");
             enemyAudio.PlayOneShot(enemyDrawSound, 0.1f * gameManager.volume);
         }
-
     }
     void RotateTowardsPlayer()
     {
@@ -69,7 +74,6 @@ public class Enemy : MonoBehaviour
 
         // rotate rigidbody from current rotation to target rotation at a set speed degrees/second
         enemyRigidbody.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotateEnemy, rotateSpeed));
-
 
 
         /* If not using physics:

@@ -9,6 +9,8 @@ public class ArrowController : MonoBehaviour
     public ArrowMovement arrowMovement;
     public PlayerController playerController;
     public GameManager gameManager;
+    public bool arrowActive;
+
     private void Awake()
     {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
@@ -24,9 +26,15 @@ public class ArrowController : MonoBehaviour
         {
             arrowMovement.MoveArrow();
         }
-        else
+        else if (gameObject.activeSelf)
         {
-            arrowCollision.StartCoroutine("DespawnArrow");
+            arrowCollision.StartCoroutine(arrowCollision.DespawnArrow());
         }
+    }
+    public void ReturnToPool()
+    {        
+        gameObject.SetActive(false);
+        arrowCollision.arrowHit = false;
+        arrowMovement.SetSpeed();
     }
 }

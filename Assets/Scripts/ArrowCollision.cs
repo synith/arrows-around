@@ -5,7 +5,7 @@ using UnityEngine;
 public class ArrowCollision : MonoBehaviour
 {
     [SerializeField] private float despawnTimer = 1;
-    private bool arrowHit;
+    public bool arrowHit;
     private ArrowController arrowController;
 
     private AudioSource arrowAudio;
@@ -66,9 +66,9 @@ public class ArrowCollision : MonoBehaviour
         arrowController.arrowMovement.arrowRigidbody.constraints = RigidbodyConstraints.None;
         arrowController.arrowMovement.arrowRigidbody.useGravity = true;
     }
-    IEnumerator DespawnArrow()
+    public IEnumerator DespawnArrow()
     {
         yield return new WaitForSeconds(despawnTimer);
-        Destroy(gameObject);
+        arrowController.ReturnToPool();
     }
 }
