@@ -122,8 +122,7 @@ public class PlayerController : MonoBehaviour
             gameManager.gameOver = true;
             TimerController.instance.EndTimer();
             isDead = true;
-            gameManager.restartButton.gameObject.SetActive(true);
-            gameManager.gameoverText.gameObject.SetActive(true);
+            gameManager.gameOverUI.gameObject.SetActive(true);
             playerHp = 0;
         }
     }

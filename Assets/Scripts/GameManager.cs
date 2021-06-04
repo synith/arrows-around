@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI gameoverText;
     public Button restartButton;
     public GameObject titleScreen;
+    public GameObject gameOverUI;
     
     [SerializeField]
     private Slider volumeSlider;
